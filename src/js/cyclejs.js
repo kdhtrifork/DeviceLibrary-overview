@@ -33,7 +33,7 @@ function model (sources) {
 }
 
 function view(devices$) {
-  return devices$.map( devices => {
+  return devices$.map( (devices) => {
     return div([
       h1("Devices"),
       button('.refresh', 'Refresh List'),
@@ -42,7 +42,8 @@ function view(devices$) {
           tr([
             th("Device Name"),
             th("OS"),
-            th("OS Version")
+            th("OS Version"),
+            th("Status")
           ])
         ]),
         tbody(
