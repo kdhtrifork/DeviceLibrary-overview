@@ -3,13 +3,30 @@
 // All of the Node.js APIs are available in this process.
 import xs from 'xstream';
 import {run} from '@cycle/xstream-run';
-import {makeDOMDriver, div, h1, table, thead, th, tbody, tr, td, hr} from '@cycle/dom';
+import {makeDOMDriver, button, div, h1, table, thead, th, tbody, tr, td, hr} from '@cycle/dom';
 import {makeHTTPDriver} from '@cycle/http';
 import DeviceTableRow from './DeviceTableRow';
 import SubmitDeviceForm from './SubmitDeviceForm'
 
-function model (HTTPSource) {
-  return HTTPSource.select('devices')
+function generateFetchDeviceListUrl() {
+  return {
+    url: 'http://46.101.160.215:1337/devices',
+    category: 'devices',
+    method: 'GET'
+  }
+}
+
+function intent(sources, initialList) {
+  return {
+    refreshButton: sources.DOM.select('.refresh')
+      .events('click')
+      .map(e => generateFetchDeviceListUrl())
+      .startWith(generateFetchDeviceListUrl())
+  }
+}
+
+function model (sources) {
+  return sources.HTTP.select('devices')
     .flatten()
     .map(res => res.body)
     .startWith(null);
@@ -19,6 +36,7 @@ function view(devices$) {
   return devices$.map( devices => {
     return div([
       h1("Devices"),
+      button('.refresh', 'Refresh List'),
       table('.devices.table.table-striped', [
         thead([
           tr([
@@ -38,16 +56,10 @@ function view(devices$) {
 }
 
 function main(sources) {
-  const getDevice$ = xs.of({
-    url: 'http://46.101.160.215:1337/devices',
-    category: 'devices',
-    method: 'GET'
-  });
-
-  const state$ = model(sources.HTTP);
-
+  const actions = intent(sources);
   const SubmitDeviceForm$ = SubmitDeviceForm(sources);
 
+  const state$ = model(sources);
   const vdom$ = xs.combine(view(state$), SubmitDeviceForm$.DOM)
     .map( ([listView, formView]) => {
       return div('.container', [
@@ -59,9 +71,9 @@ function main(sources) {
     });
 
   const requests$ = xs.merge(
-    getDevice$,
+    actions.refreshButton,
     SubmitDeviceForm$.HTTP
-  ).debug(e => console.log(e))
+  );
 
   return {
     DOM: vdom$,
