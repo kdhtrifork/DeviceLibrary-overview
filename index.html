@@ -3,17 +3,16 @@
   <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./build/style/main.css">
   </head>
   <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <div id="app"></div>
   </body>
 
+  <script>require('electron-connect').client.create()</script>
   <script>
     // You can also require other files to run in this process
-    require('./renderer.js')
+    require('./build/app.bundle.js')
   </script>
 </html>

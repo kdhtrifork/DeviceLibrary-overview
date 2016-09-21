@@ -23,6 +23,20 @@
   },
   "homepage": "https://github.com/electron/electron-quick-start#readme",
   "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
     "electron": "^1.3.4"
+  },
+  "dependencies": {
+    "@cycle/dom": "^12.2.5",
+    "@cycle/http": "^11.0.1",
+    "@cycle/xstream-run": "^3.1.0",
+    "babel": "^6.5.2",
+    "electron-connect": "^0.6.0",
+    "grunt": "^1.0.1",
+    "gulp": "^3.9.1",
+    "webpack": "^1.13.2",
+    "xstream": "^6.3.0"
   }
 }
